@@ -2,9 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProcCube: Object
+public class ProcCube : Object
 {
-    public enum Cubeside { BOTTOM, TOP, LEFT, RIGHT, FRONT, BACK };
+    public enum Cubeside
+    {
+        BOTTOM,
+        TOP,
+        LEFT,
+        RIGHT,
+        FRONT,
+        BACK
+    };
+
+    private static GameObject cube;
+
+    public static GameObject Clone(Vector3 pos)
+    {
+        if (cube == null)
+        {
+            CreateCube(Vector3.zero);
+            cube.SetActive(false);
+        }
+
+        GameObject cubeClone = new GameObject();
+        cubeClone.AddComponent<MeshFilter>();
+        cubeClone.AddComponent<MeshRenderer>();
+        cubeClone.GetComponent<MeshFilter>().mesh = cube.GetComponent<MeshFilter>().mesh;
+        MeshRenderer rend = cubeClone.GetComponent<MeshRenderer>();
+        rend.material = cube.GetComponent<MeshRenderer>().material;
+        cubeClone.AddComponent<Rigidbody>();
+        cubeClone.AddComponent<BoxCollider>();
+        cubeClone.name = "Sphere(Clone)";
+        cubeClone.gameObject.SetActive(true);
+        cubeClone.transform.position = pos;
+        return cubeClone;
+    }
 
     public static void CreateQuad(Cubeside side, GameObject parent)
     {
@@ -35,46 +67,64 @@ public class ProcCube: Object
         switch (side) //**
         {
             case Cubeside.BOTTOM:
-                vertices = new Vector3[] { p0, p1, p2, p3 };
-                normals = new Vector3[] {Vector3.down, Vector3.down,
-                                            Vector3.down, Vector3.down};
-                uvs = new Vector2[] { uv11, uv01, uv00, uv10 };
-                triangles = new int[] { 3, 1, 0, 3, 2, 1 };
+                vertices = new Vector3[] {p0, p1, p2, p3};
+                normals = new Vector3[]
+                {
+                    Vector3.down, Vector3.down,
+                    Vector3.down, Vector3.down
+                };
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new int[] {3, 1, 0, 3, 2, 1};
                 break;
             case Cubeside.TOP:
-                vertices = new Vector3[] { p7, p6, p5, p4 };
-                normals = new Vector3[] {Vector3.up, Vector3.up,
-                                            Vector3.up, Vector3.up};
-                uvs = new Vector2[] { uv11, uv01, uv00, uv10 };
-                triangles = new int[] { 3, 1, 0, 3, 2, 1 };
+                vertices = new Vector3[] {p7, p6, p5, p4};
+                normals = new Vector3[]
+                {
+                    Vector3.up, Vector3.up,
+                    Vector3.up, Vector3.up
+                };
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new int[] {3, 1, 0, 3, 2, 1};
                 break;
             case Cubeside.LEFT:
-                vertices = new Vector3[] { p7, p4, p0, p3 };
-                normals = new Vector3[] {Vector3.left, Vector3.left,
-                                            Vector3.left, Vector3.left};
-                uvs = new Vector2[] { uv11, uv01, uv00, uv10 };
-                triangles = new int[] { 3, 1, 0, 3, 2, 1 };
+                vertices = new Vector3[] {p7, p4, p0, p3};
+                normals = new Vector3[]
+                {
+                    Vector3.left, Vector3.left,
+                    Vector3.left, Vector3.left
+                };
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new int[] {3, 1, 0, 3, 2, 1};
                 break;
             case Cubeside.RIGHT:
-                vertices = new Vector3[] { p5, p6, p2, p1 };
-                normals = new Vector3[] {Vector3.right, Vector3.right,
-                                            Vector3.right, Vector3.right};
-                uvs = new Vector2[] { uv11, uv01, uv00, uv10 };
-                triangles = new int[] { 3, 1, 0, 3, 2, 1 };
+                vertices = new Vector3[] {p5, p6, p2, p1};
+                normals = new Vector3[]
+                {
+                    Vector3.right, Vector3.right,
+                    Vector3.right, Vector3.right
+                };
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new int[] {3, 1, 0, 3, 2, 1};
                 break;
             case Cubeside.FRONT:
-                vertices = new Vector3[] { p4, p5, p1, p0 };
-                normals = new Vector3[] {Vector3.forward, Vector3.forward,
-                                            Vector3.forward, Vector3.forward};
-                uvs = new Vector2[] { uv11, uv01, uv00, uv10 };
-                triangles = new int[] { 3, 1, 0, 3, 2, 1 };
+                vertices = new Vector3[] {p4, p5, p1, p0};
+                normals = new Vector3[]
+                {
+                    Vector3.forward, Vector3.forward,
+                    Vector3.forward, Vector3.forward
+                };
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new int[] {3, 1, 0, 3, 2, 1};
                 break;
             case Cubeside.BACK:
-                vertices = new Vector3[] { p6, p7, p3, p2 };
-                normals = new Vector3[] {Vector3.back, Vector3.back,
-                                            Vector3.back, Vector3.back};
-                uvs = new Vector2[] { uv11, uv01, uv00, uv10 };
-                triangles = new int[] { 3, 1, 0, 3, 2, 1 };
+                vertices = new Vector3[] {p6, p7, p3, p2};
+                normals = new Vector3[]
+                {
+                    Vector3.back, Vector3.back,
+                    Vector3.back, Vector3.back
+                };
+                uvs = new Vector2[] {uv11, uv01, uv00, uv10};
+                triangles = new int[] {3, 1, 0, 3, 2, 1};
                 break;
         }
 
@@ -93,7 +143,7 @@ public class ProcCube: Object
 
     public static void CreateCube(Vector3 pos)
     {
-        GameObject cube = new GameObject();
+        cube = new GameObject();
         cube.AddComponent<MeshFilter>();
         cube.AddComponent<MeshRenderer>();
         CreateQuad(Cubeside.FRONT, cube);
@@ -115,22 +165,23 @@ public class ProcCube: Object
             {
                 filters.Add(meshFilters[i]);
             }
+
             i++;
         }
 
         CombineInstance[] combine = new CombineInstance[filters.Count];
         i = 0;
-        foreach(MeshFilter m in filters)
+        foreach (MeshFilter m in filters)
         {
             combine[i].mesh = m.mesh;
             combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
             m.gameObject.SetActive(false);
-            i++; 
+            i++;
         }
 
         cube.GetComponent<MeshFilter>().mesh = new Mesh();
         cube.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
-        cube.GetComponent<MeshFilter>().mesh.name = "CreatedCube";
+        cube.GetComponent<MeshFilter>().mesh.name = "CreatedCube_" + Time.realtimeSinceStartup.ToString();
         MeshRenderer rend = cube.GetComponent<MeshRenderer>();
         rend.material = new Material(Shader.Find("Holistic/Plasma"));
         cube.AddComponent<Rigidbody>();
@@ -138,6 +189,5 @@ public class ProcCube: Object
         cube.name = "Cube";
         cube.gameObject.SetActive(true);
         cube.transform.position = pos;
-
     }
 }
