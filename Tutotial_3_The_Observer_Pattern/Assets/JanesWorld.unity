@@ -871,9 +871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeb9fcc0b8fdd4a8b8577988e0eeb6a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPos: {fileID: 5597698399377776004, guid: d288d9a75bc5c4706ab5d40da47fc5c1,
-    type: 3}
-  eggIcon: {fileID: 6356376957936031445, guid: d288d9a75bc5c4706ab5d40da47fc5c1, type: 3}
+  playerPos: {fileID: 1792587451}
 --- !u!114 &805631611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1331,8 +1329,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eggPrefab: {fileID: 2312176011209901260, guid: 2ec1acc1495b14d5fb1ada0668f17496,
     type: 3}
+  medKitPrefab: {fileID: 9182598367151246119, guid: c622e837a5b5d452c891214a36fb7892,
+    type: 3}
   terrain: {fileID: 1681156844}
-  eggDrop: {fileID: 11400000, guid: 4f40d9fb5e93342e88c507e08ffefa27, type: 2}
 --- !u!4 &994097168
 Transform:
   m_ObjectHideFlags: 0
