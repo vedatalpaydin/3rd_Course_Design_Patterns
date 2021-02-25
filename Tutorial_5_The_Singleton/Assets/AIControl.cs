@@ -3,15 +3,14 @@ using UnityEngine.AI;
 
 public class AIControl : MonoBehaviour {
 
-	GameObject[] goalLocations;
 	NavMeshAgent agent;
     Animator anim;
     Vector3 lastGoal;
 
 
 	// Use this for initialization
-	void Start () {
-		goalLocations = GameObject.FindGameObjectsWithTag("goal");
+	void Start ()
+	{
 		agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         anim.SetBool("isWalking", true);
@@ -21,7 +20,8 @@ public class AIControl : MonoBehaviour {
     void PickGoalLocation()
     {
         lastGoal = agent.destination;
-        agent.SetDestination(goalLocations[Random.Range(0, goalLocations.Length)].transform.position);
+        GameObject goalPos = GameEnvironment.Singleton.GetRandomGoal();
+        agent.SetDestination(goalPos.transform.position);
     }
 
 	
@@ -30,6 +30,18 @@ public class AIControl : MonoBehaviour {
         if (agent.remainingDistance < 1) //At the goal
         {
             PickGoalLocation();
+        }
+
+        foreach (var go in GameEnvironment.Singleton.Obstacles)
+        {
+	        float distance = Vector3.Distance(go.transform.position, transform.position);
+	        if (distance<5 && Random.Range(0,100)<5)
+		        agent.SetDestination(lastGoal);
+	        else if (distance < 1)
+	        {
+		        GameEnvironment.Singleton.RemoveObstacles(go);
+		        break;
+	        }
         }
 	}
 }

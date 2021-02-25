@@ -5,10 +5,16 @@ public sealed class GameEnvironment
 {
     private static GameEnvironment instance;
     private List<GameObject> obstacles = new List<GameObject>();
+    private List<GameObject> goals = new List<GameObject>();
 
     public List<GameObject> Obstacles
     {
         get { return obstacles; }
+    }
+
+    public List<GameObject> Goals
+    {
+        get { return goals; }
     }
 
     public static GameEnvironment Singleton
@@ -18,10 +24,17 @@ public sealed class GameEnvironment
             if (instance == null)
             {
                 instance = new GameEnvironment();
+                instance.Goals.AddRange(GameObject.FindGameObjectsWithTag("goal"));
             }
 
             return instance;
         }
+    }
+
+    public GameObject GetRandomGoal()
+    {
+        int index = Random.Range(0, goals.Count);
+        return goals[index];
     }
 
     public void AddObstacles(GameObject go)
@@ -33,5 +46,6 @@ public sealed class GameEnvironment
     {
         int index = obstacles.IndexOf(go);
         obstacles.RemoveAt(index);
+        GameObject.Destroy(go);
     }
 }
