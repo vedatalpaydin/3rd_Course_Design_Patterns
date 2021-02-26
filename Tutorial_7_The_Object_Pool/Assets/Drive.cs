@@ -6,6 +6,7 @@ public class Drive : MonoBehaviour
 {
     public float speed = 10.0f;
     public Slider healthBar;
+    public GameObject explosion;
 
     void Update()
     {
@@ -32,7 +33,14 @@ public class Drive : MonoBehaviour
         if (other.gameObject.tag=="Asteroid")
         {
             other.gameObject.SetActive(false);
-            healthBar.value--;
+            healthBar.value-=30;
+            if (healthBar.value <= 0)
+            {
+                Instantiate(explosion, transform.position, Quaternion.identity);
+                Destroy(healthBar.gameObject,0.1f);
+                Destroy(gameObject, 0.1f);
+            }
+
         }
     }
 }
