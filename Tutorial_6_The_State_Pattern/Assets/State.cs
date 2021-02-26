@@ -11,6 +11,7 @@ public class State
         PATROL,
         PURSUE,
         ATTACK,
+        RUNAWAY,
         SLEEP
     };
 
@@ -29,6 +30,7 @@ public class State
     protected State nextState;
     protected NavMeshAgent agent;
 
+    private float scareDist = 2.0f;
     private float visDist = 10.0f;
     private float visAngle = 30.0f;
     private float shootDist = 7.0f;
@@ -93,6 +95,19 @@ public class State
 
         return false;
     }
+
+    public bool IsPlayerBehind()
+    {
+        Vector3 direction = npc.transform.position - player.position;
+        float angle = Vector3.Angle(direction, npc.transform.forward);
+
+        if (direction.magnitude < scareDist && angle < visAngle)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
 
 public class Idle : State
@@ -116,7 +131,7 @@ public class Idle : State
             nextState = new Pursue(npc, agent, anim, player);
             stage = EVENT.EXIT;
         }
-        else if (Random.Range(0, 100) < 10)
+        else if (Random.Range(0, 5000) < 10)
         {
             nextState = new Patrol(npc, agent, anim, player);
             stage = EVENT.EXIT;
@@ -172,6 +187,12 @@ public class Patrol : State
         if (CanSeePlayer())
         {
             nextState = new Pursue(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
+
+        else if (IsPlayerBehind())
+        {
+            nextState = new Runaway(npc, agent, anim, player);
             stage = EVENT.EXIT;
         }
     }
@@ -263,6 +284,41 @@ public class Attack : State
     {
         anim.ResetTrigger("isShooting");
         shoot.Stop();
+        base.Exit();
+    }
+}
+
+public class Runaway : State
+{
+    private GameObject safeLocation;
+    public Runaway(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player)
+        : base(_npc, _agent, _anim, _player)
+    {
+        name = STATE.RUNAWAY;
+        safeLocation = GameObject.FindGameObjectWithTag("Safe");
+        
+    }
+    public override void Enter()
+    {
+        anim.SetTrigger("isRunning");
+        agent.isStopped = false;
+        agent.speed = 6;
+        agent.SetDestination(safeLocation.transform.position);
+        base.Enter();
+    }
+
+    public override void Update()
+    {
+        if (agent.remainingDistance <1)
+        {
+            nextState = new Idle(npc, agent, anim, player);
+            stage = EVENT.EXIT;
+        }
+    }
+
+    public override void Exit()
+    {
+        anim.ResetTrigger("isRunning");
         base.Exit();
     }
 }
